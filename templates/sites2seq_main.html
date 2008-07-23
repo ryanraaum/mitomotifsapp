@@ -5,7 +5,35 @@
 </head>
 <body>
     <form action="submit" method="post">
-        <div><textarea name="content" rows="3" cols="60"></textarea></div>
+        <div>
+            <h4>Format</h4>
+            <ul>
+                <li><input type="radio" name="format" value="motif_only"     checked >
+                    Motif Only (i.e. 16129A 16223T)</li>
+                <li><input type="radio" name="format" value="name_and_motif"         >
+                    Name and Motif (i.e. Hg1 16129A 16223T)</li>
+                <li><input type="radio" name="format" value="name_n_and_motif"       >
+                    Name, N, and Motif (i.e. Hg1 2 16129A 16223T)</li>
+            </ul>
+        </div>
+        <div>
+            <h4>Output</h4>
+            <ul>
+                <li><input type="radio" name="output" value="hvr1"     checked >
+                    HVR1 (positions 16024-16365)</li>
+                <li><input type="radio" name="output" value="hvr2"             >
+                    HVR2 (positions 73-340)</li>
+                <li><input type="radio" name="output" value="hvr1and2"         >
+                    HVR1 and HVR2 (positions 16024-16365 and 73-340)</li>
+                <li><input type="radio" name="output" value="hvr1to2"          >
+                    HVR1 through HVR2 (positions 16024-16569 and 1-340)</li>
+                <li><input type="radio" name="output" value="coding"           >
+                    Coding Region (positions 577-15992)</li>
+                <li><input type="radio" name="output" value="all"              >
+                    All (positions 1-16569)</li>
+            </ul>
+        </div>
+        <div><textarea name="content" rows="10" cols="60"></textarea></div>
         <div><input type="submit" value="Submit"></div>
     </form>
 </body>

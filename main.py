@@ -16,6 +16,7 @@
 #
 
 import os
+import cgi
 import wsgiref.handlers
 
 from google.appengine.ext import webapp
@@ -48,7 +49,44 @@ class Sites2SeqHandler(webapp.RequestHandler):
             _404error(self)
             
     def post(self, action):
-        self.response.out.write(action)
+        # get posted parameters
+        format = self.request.get('format')
+        output = self.request.get('output')
+        content = self.request.get('content')
+        # validate submission
+        problems = []
+        valid = True
+        if not format in ['motif_only', 'name_and_motif', 'name_n_and_motif']:
+            valid = False
+            problems.append('given format not one of the acceptable options.')
+        if not output in ['hvr1', 'hvr2', 'hvr1and2', 'hvr1to2', 'coding', 'all']:
+            valid = False
+            problems.append('given output not one of the acceptable options.')
+        content_lines = content.split('\n')
+        result_lines = []
+        if valid:
+            for line in content_lines:
+                if format == 'motif_only':
+                    motifs = line
+                elif format == 'name_and_motif':
+                    name, motifs = line.split(' ', 1)
+                else:
+                    name, n, motifs = line.split(' ', 2)
+                try:
+                    result_lines.append(sites2seq(motifs.encode('utf8')))
+                except MitoMotifError, e:
+                    valid = False
+                    problems.append(e.message)
+            
+        if not valid:
+            self.response.out.write('<h1>INVALID INPUT</h1>')
+            self.response.out.write('%s' % problems)
+        self.response.out.write('<p>action: %s</p>' % action)
+        self.response.out.write('<p>format: %s</p>' % cgi.escape(self.request.get('format')))
+        self.response.out.write('<p>output: %s</p>' % cgi.escape(self.request.get('output')))
+        self.response.out.write('<p>content: %s</p>' % cgi.escape(self.request.get('content')))
+        for entry in result_lines:
+            self.response.out.write('<p>result: %s</p>' % entry)
 
 class NoSuchURLHandler(webapp.RequestHandler):
     def get(self):
