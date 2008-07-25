@@ -17,12 +17,14 @@
 
 import os
 import cgi
+import re
+
 import wsgiref.handlers
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
-from sites2seq import sites2seq
+from mitomotifs.sites2seq import sites2seq
 
 TEMPLATES = os.path.join(os.path.dirname(__file__), 'templates')
 
@@ -65,13 +67,24 @@ class Sites2SeqHandler(webapp.RequestHandler):
         content_lines = content.split('\n')
         result_lines = []
         if valid:
-            for line in content_lines:
+            for curr_line in content_lines:
+                line = re.sub(r'[,;]', '', curr_line)
                 if format == 'motif_only':
                     motifs = line
                 elif format == 'name_and_motif':
-                    name, motifs = line.split(' ', 1)
+                    split = line.split(' ', 1)
+                    if len(split) == 2:
+                        name, motifs = split 
+                    else:
+                        valid = False
+                        problems.append('The entry "%s" does not seem to be correctly formatted' % curr_line)
                 else:
-                    name, n, motifs = line.split(' ', 2)
+                    split = line.split(' ', 2)
+                    if len(split) == 3:
+                        name, n, motifs = split 
+                    else:
+                        valid = False
+                        problems.append('The entry "%s" does not seem to be correctly formatted' % curr_line)
                 try:
                     result_lines.append(sites2seq(motifs.encode('utf8')))
                 except MitoMotifError, e:

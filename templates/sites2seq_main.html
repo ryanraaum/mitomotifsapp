@@ -7,6 +7,9 @@
     <form action="submit" method="post">
         <div>
             <h4>Format</h4>
+            <p>Enter separate individuals/haplotypes on separate lines.
+            Commas (,) and semi-colons (;) within the line are ok (will be
+            ignored).</p>
             <ul>
                 <li><input type="radio" name="format" value="motif_only"     checked >
                     Motif Only (i.e. 16129A 16223T)</li>
@@ -33,6 +36,7 @@
                     All (positions 1-16569)</li>
             </ul>
         </div>
+        <p>To retrieve the revised Cambridge Reference Sequence, use 'rCRS' as the motif.</p>
         <div><textarea name="content" rows="10" cols="60"></textarea></div>
         <div><input type="submit" value="Submit"></div>
     </form>
