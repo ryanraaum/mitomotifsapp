@@ -1,1 +1,0 @@
-../oldowan/mitomotifs/oldowan/mitomotifs/sites2seq.py
