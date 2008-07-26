@@ -1,0 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    <title>MitoMotifs Tools: Error</title>
+</head>
+<body>
+    <h2>Error</h2>
+    <p>There were some serious errors processing your submission.
+    As far as I can tell, these were:</p>
+    <ul>
+        {% for problem in problems %}
+        <li>{{ problem }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
