@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
-    <title>MitoMotifs Tools: Sites2Seq</title>
+    <title>MitoMotifs Tools: Seq2Sites</title>
     <script language="JavaScript">
 function seq_example_fill() {
     document.mitoform.content.value='TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAACC\nGCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATACT\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCTCCTCATGCTTACAA\nGCAAGTACAGCAATCAACCCTCAACTATCACACATCAACTGCAACTCCAAAGTCACCCCT\nCACCCATTAGGATACCAACAAACCTACCCATCCTTAACAGTACATAGTACATAAAGCCAT\nTTACCGTACATAGCACATTACAGTCAAATCCCTTCTCGTCCC';
@@ -15,61 +15,45 @@ function clear_content() {
     </script>
 </head>
 <body>
-    <form name="mitoform" action="submit" method="post">
+    <form name="mitoform" action="results" method="post">
         <div>
             <h4>Input format</h4>
-            <p>For 'Sequence Only', and 'Name and Sequence', enter sequences 
-            on separate lines. If using a name, that should be the first thing
-            on each line, followed by a space (any number of spaces is ok). 
-            <p>If submitting sequences in FASTA format, simply paste in 
-            properly formatted FASTA sequences. Please note that there are
-            limits on the number of sequences you may submit at one time.
-            These limits are based on the size of the input range you choose
-            below.</p>
+            <p>You may paste in either a single sequence
+            (<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
+                >see example</a>) or multiple sequences in FASTA format
+            (<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
+                >see example</a>). The first letter of your submission
+            is used to determine what you have submitted. If the first letter is
+            a '&gt;' character, then it is assumed you have submitted 
+            multiple sequences in FASTA format. Otherwise it is assumed you
+            have submitted a single sequence.</p>
+            <p>All non-IUPAC nucleotide characters will be removed before the 
+            sequence is processed, so it is ok if the sequences include spaces
+            or line breaks. You should indicate unknown bases with 'N'.</p>
+            <p>If submitting multiple sequences, please note that there are
+            limits on the number of sequences you may submit at one time.</p>
+        </div>
+        <div>
+            <h4>Limits</h4>
+            <p>The underlying implementation of this web service does not allow
+            long-running requests, which means not too many 
+            sequences at once. The current limits are based upon the length of
+            the sequences you submit and are:</p>
             <ul>
-                <li><input type="radio" name="format" value="single_seq"         >
-                Single Sequence 
-                (<a href="#" onClick="javascript:seq_example_fill()">See Example</a>)
-                </li>
-                <li><input type="radio" name="format" value="fasta"      checked >
-                Multiple sequences in FASTA format 
-                (<a href="#" onClick="javascript:fasta_example_fill()">See Example</a>)
-                </li>
+                <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
+                    sequences at a time.</li>
+                <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
+                    sequences at a time.</li>
             </ul>
         </div>
         <div>
-            <h4>Sequence input is in range:</h4>
-            <p>Select the sequence range in which your sequences fall. It is
-            important that your sequences fall completely within the range.
-            For this reason, the options are fairly generous for their labels
-            (i.e. the HVR1-named range here is substantially larger than the
-            true HVR1 region). If in doubt, select 'All'.</p>
-            <p>It is also very important that your provided sequences are in
-            the order of the input range. That is, if you have both HVR1 and
-            HVR2 combined in the order HVR1, then HVR2, then you MUST select
-            the 'HVR1 through HVR2' option. Alternatively (and unusually) if 
-            you have both HVR1 and HVR2, but have concatenated them in the
-            order HVR2, then HVR1, then you must choose the 'All' range
-            option. Finally, if you have sequences that run
-            past the standard "end" of the mtDNA genome that are longer than
-            the offered 'HVR1 through HVR2' range, you will have to cut and
-            shuffle your sequences so that they fall in the 1-16569 range
-            in that order.</p>
-            <ul>
-                <li><input type="radio" name="seq_range" value="hvr1"     checked >
-                    HVR1 (positions 15993-16569)</li>
-                <li><input type="radio" name="seq_range" value="hvr2"             >
-                    HVR2 (positions 1-576)</li>
-                <li><input type="radio" name="seq_range" value="hvr1to2"          >
-                    HVR1 through HVR2 (positions 15993-576)</li>
-                <li><input type="radio" name="seq_range" value="coding"           >
-                    Coding Region (positions 577-15992)</li>
-                <li><input type="radio" name="seq_range" value="all"              >
-                    All (positions 1-16569)</li>
-            </ul>
+            <textarea name="content" rows="10" cols="60"></textarea>
         </div>
-        <div><textarea name="content" rows="10" cols="60"></textarea></div>
-        <div><input type="submit" value="Submit"></div>
+        <div>
+            <input type="submit" value="Submit" default="true">
+            (<a href="javascript:void(0);" onClick="javascript:clear_content()"
+                >clear contents</a>)
+        </div>
     </form>
 </body>
 </html>
