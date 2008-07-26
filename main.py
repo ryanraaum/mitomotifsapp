@@ -141,6 +141,10 @@ class Seq2SitesHandler(webapp.RequestHandler):
             names = None
             seqs = [content]
 
+        # enforce limits for multisequence submissions
+        if format == 'fasta':
+            pass
+
         result_lines = []
         for seq in seqs:
             sub = re.sub(r'[^ACGTURYMKSWBDHVN]', '', seq.upper())
