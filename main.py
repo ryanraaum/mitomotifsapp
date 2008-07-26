@@ -24,7 +24,9 @@ import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
-from mitomotifs.sites2seq import sites2seq
+from mitomotifs import seq2sites
+from mitomotifs import sites2str
+from fasta import iterate_fasta
 
 TEMPLATES = os.path.join(os.path.dirname(__file__), 'templates')
 
@@ -101,6 +103,69 @@ class Sites2SeqHandler(webapp.RequestHandler):
         for entry in result_lines:
             self.response.out.write('<p>result: %s</p>' % entry)
 
+class Seq2SitesHandler(webapp.RequestHandler):
+    def get(self, action):
+        if action == "" or action == "main":
+            template_values = {}
+            path = os.path.join(TEMPLATES, 'seq2sites_main.html')
+            self.response.out.write(template.render(path, template_values))
+        else:
+            _404error(self)
+            
+    def post(self, action):
+
+        # get posted parameters
+        format = self.request.get('format')
+        seq_range = self.request.get('seq_range').encode('utf8')
+        content = self.request.get('content')
+
+        # validate submission
+        problems = []
+        valid = True
+        if not format in ['single_seq', 'fasta']:
+            valid = False
+            problems.append('given format not one of the acceptable options.')
+        if not seq_range in ['hvr1', 'hvr2', 'hvr1to2', 'coding', 'all']:
+            valid = False
+            problems.append('given sequence range not one of the acceptable options.')
+
+        # pull names and sequence out of submitted content
+        content = content.encode('utf8')
+        names = []
+        seqs = []
+        if format == 'fasta':
+            for entry in iterate_fasta(content, 'text'):
+                names.append(entry['name'])
+                seqs.append(entry['sequence'])
+        else:
+            if format == 'single_seq':
+                names = None
+                # limit sequences to valid IUPAC nucleotide codes and upcase the sequence
+                seqs = [content]
+            else:
+                for line in content.split('\n'):
+                    split_line = line.split(' ', 1)
+                    if len(split_line) != 2:
+                        raise Exception('format problem')
+                    name, seq = split_line
+                    names.append(name)
+                    seqs.append(seq)
+
+        result_lines = []
+        for seq in seqs:
+            sub = re.sub(r'[^ACGTURYMKSWBDHVN]', '', seq.upper())
+            result_lines.append(sites2str(seq2sites(sub, what=seq_range)))
+
+        if not valid:
+            self.response.out.write('<h1>INVALID INPUT</h1>')
+            self.response.out.write('%s' % problems)
+        self.response.out.write('<p>action: %s</p>' % action)
+        self.response.out.write('<p>format: %s</p>' % cgi.escape(self.request.get('format')))
+        self.response.out.write('<p>seq_range: %s</p>' % cgi.escape(self.request.get('seq_range')))
+        self.response.out.write('<p>content: %s</p>' % cgi.escape(self.request.get('content')))
+        for entry in result_lines:
+            self.response.out.write('<p>result: %s</p>' % entry)
+
 class NoSuchURLHandler(webapp.RequestHandler):
     def get(self):
         _404error(self)
@@ -112,6 +177,7 @@ def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
         ('/sites2seq/(.*)', Sites2SeqHandler),
+        ('/seq2sites/(.*)', Seq2SitesHandler),
         ('/.*', NoSuchURLHandler),
         ],debug=True)
     wsgiref.handlers.CGIHandler().run(application)
