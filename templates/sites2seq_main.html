@@ -2,9 +2,23 @@
 <html lang="en">
 <head>
     <title>MitoMotifs Tools: Sites2Seq</title>
+    <script language="JavaScript">
+function motif_only() {
+    document.mitoform.content.value='16129A 16223T\n16129A,16223T\n16129A;16223T';
+}
+function name_and_motif() {
+    document.mitoform.content.value='Ind1 16129A 16223T\nInd2,16129A,16223T\nInd3;16129A;16223T';
+}
+function name_n_and_motif() {
+    document.mitoform.content.value='Ind1 1 16129A 16223T\nInd2,2,16129A,16223T\nInd3;3;16129A;16223T';
+}
+function clear_content() {
+    document.mitoform.content.value='';
+}
+    </script>
 </head>
 <body>
-    <form action="submit" method="post">
+    <form name="mitoform" action="results" method="post">
         <div>
             <h4>Format</h4>
             <p>Enter separate individuals/haplotypes on separate lines.
@@ -12,11 +26,20 @@
             ignored).</p>
             <ul>
                 <li><input type="radio" name="format" value="motif_only"     checked >
-                    Motif Only (i.e. 16129A 16223T)</li>
+                Motif Only 
+                (<a href="javascript:void(0);" onClick="javascript:motif_only()"
+                >see example</a>) 
+                </li>
                 <li><input type="radio" name="format" value="name_and_motif"         >
-                    Name and Motif (i.e. Hg1 16129A 16223T)</li>
+                Name and Motif 
+                (<a href="javascript:void(0);" onClick="javascript:name_and_motif()"
+                >see example</a>) 
+                </li>
                 <li><input type="radio" name="format" value="name_n_and_motif"       >
-                    Name, N, and Motif (i.e. Hg1 2 16129A 16223T)</li>
+                Name, N, and Motif 
+                (<a href="javascript:void(0);" onClick="javascript:name_n_and_motif()"
+                >see example</a>) 
+                </li>
             </ul>
         </div>
         <div>
@@ -38,7 +61,11 @@
         </div>
         <p>To retrieve the revised Cambridge Reference Sequence, use 'rCRS' as the motif.</p>
         <div><textarea name="content" rows="10" cols="60"></textarea></div>
-        <div><input type="submit" value="Submit"></div>
+        <div>
+            <input type="submit" value="Submit" default="true">
+            (<a href="javascript:void(0);" onClick="javascript:clear_content()"
+                >clear contents</a>)
+        </div>
     </form>
 </body>
 </html>
