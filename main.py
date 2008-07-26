@@ -138,18 +138,8 @@ class Seq2SitesHandler(webapp.RequestHandler):
                 names.append(entry['name'])
                 seqs.append(entry['sequence'])
         else:
-            if format == 'single_seq':
-                names = None
-                # limit sequences to valid IUPAC nucleotide codes and upcase the sequence
-                seqs = [content]
-            else:
-                for line in content.split('\n'):
-                    split_line = line.split(' ', 1)
-                    if len(split_line) != 2:
-                        raise Exception('format problem')
-                    name, seq = split_line
-                    names.append(name)
-                    seqs.append(seq)
+            names = None
+            seqs = [content]
 
         result_lines = []
         for seq in seqs:
