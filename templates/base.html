@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  <title>{% block title %}MitoMotif{% endblock %}</title>
+  {% block javascript %}{% endblock %}
+</head>
+
+<body>
+
+  <div id="header">
+  </div>
+
+  <div id="navigation">
+    {% block navigation %}
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/seq2sites/">seq2sites</a></li>
+      <li><a href="/sites2seq/">sites2seq</a></li>
+    </ul>
+    {% endblock %}
+  </div>
+
+  <div id="content">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
+

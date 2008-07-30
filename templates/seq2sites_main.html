@@ -1,59 +1,60 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-<head>
-    <title>MitoMotifs Tools: Seq2Sites</title>
-    <script language="JavaScript">
+{% extends "base.html" %}
+
+{% block title %}MitoMotif Tools: Seq2Sites{% endblock %}
+
+{% block javascript %}
+<script language="JavaScript">
 function seq_example_fill() {
-    document.mitoform.content.value='TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAACC\nGCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATACT\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCTCCTCATGCTTACAA\nGCAAGTACAGCAATCAACCCTCAACTATCACACATCAACTGCAACTCCAAAGTCACCCCT\nCACCCATTAGGATACCAACAAACCTACCCATCCTTAACAGTACATAGTACATAAAGCCAT\nTTACCGTACATAGCACATTACAGTCAAATCCCTTCTCGTCCC';
+  document.mitoform.content.value='TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAACC\nGCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATACT\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCTCCTCATGCTTACAA\nGCAAGTACAGCAATCAACCCTCAACTATCACACATCAACTGCAACTCCAAAGTCACCCCT\nCACCCATTAGGATACCAACAAACCTACCCATCCTTAACAGTACATAGTACATAAAGCCAT\nTTACCGTACATAGCACATTACAGTCAAATCCCTTCTCGTCCC';
 }
 function fasta_example_fill() {
-    document.mitoform.content.value='>Seq1\nTTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC\nGCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATAC\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCCCCTCATGCTTACA\nGCAAGTACAGCAATCAACC\n>Seq2\nTTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC\nGCTATGTATCTCGTACATTACTGCCAGCCACCATGAATATTGTACAGTACCATAAATAC\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAA-CCCCCCCCCCATGCTTACA\nGCAAGTACAGCAATCAACC\n';
+  document.mitoform.content.value='>Seq1\nTTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC\nGCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATAC\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCCCCTCATGCTTACA\nGCAAGTACAGCAATCAACC\n>Seq2\nTTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC\nGCTATGTATCTCGTACATTACTGCCAGCCACCATGAATATTGTACAGTACCATAAATAC\nTGACCACCTGTAGTACATAAAAACCCAATCCACATCAAA-CCCCCCCCCCATGCTTACA\nGCAAGTACAGCAATCAACC\n';
 }
 function clear_content() {
-    document.mitoform.content.value='';
+  document.mitoform.content.value='';
 }
-    </script>
-</head>
-<body>
-    <form name="mitoform" action="results" method="post">
-        <div>
-            <h4>Input format</h4>
-            <p>You may paste in either a single sequence
-            (<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
-                >see example</a>) or multiple sequences in FASTA format
-            (<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
-                >see example</a>). The first letter of your submission
-            is used to determine what you have submitted. If the first letter is
-            a '&gt;' character, then it is assumed you have submitted 
-            multiple sequences in FASTA format. Otherwise it is assumed you
-            have submitted a single sequence.</p>
-            <p>All non-IUPAC nucleotide characters will be removed before the 
-            sequence is processed, so it is ok if the sequences include spaces
-            or line breaks. You should indicate unknown bases with 'N'.</p>
-            <p>If submitting multiple sequences, please note that there are
-            limits on the number of sequences you may submit at one time.</p>
-        </div>
-        <div>
-            <h4>Limits</h4>
-            <p>The underlying implementation of this web service does not allow
-            long-running requests, which means not too many 
-            sequences at once. The current limits are based upon the length of
-            the sequences you submit and are:</p>
-            <ul>
-                <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
-                    sequences at a time.</li>
-                <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
-                    sequences at a time.</li>
-            </ul>
-        </div>
-        <div>
-            <textarea name="content" rows="10" cols="60"></textarea>
-        </div>
-        <div>
-            <input type="submit" value="Submit" default="true">
-            (<a href="javascript:void(0);" onClick="javascript:clear_content()"
-                >clear contents</a>)
-        </div>
-    </form>
-</body>
-</html>
+</script>
+{% endblock %}
+
+{% block content %}
+<form name="mitoform" action="results" method="post">
+  <div>
+    <h4>Input format</h4>
+    <p>You may paste in either a single sequence
+    (<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
+      >see example</a>) or multiple sequences in FASTA format
+    (<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
+      >see example</a>). The first letter of your submission
+    is used to determine what you have submitted. If the first letter is
+    a '&gt;' character, then it is assumed you have submitted 
+    multiple sequences in FASTA format. Otherwise it is assumed you
+    have submitted a single sequence.</p>
+    <p>All non-IUPAC nucleotide characters will be removed before the 
+    sequence is processed, so it is ok if the sequences include spaces
+    or line breaks. You should indicate unknown bases with 'N'.</p>
+    <p>If submitting multiple sequences, please note that there are
+    limits on the number of sequences you may submit at one time.</p>
+  </div>
+  <div>
+    <h4>Limits</h4>
+    <p>The underlying implementation of this web service does not allow
+    long-running requests, which means not too many 
+    sequences at once. The current limits are based upon the length of
+    the sequences you submit and are:</p>
+    <ul>
+      <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
+        sequences at a time.</li>
+      <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
+        sequences at a time.</li>
+    </ul>
+  </div>
+  <div>
+    <textarea name="content" rows="10" cols="60"></textarea>
+  </div>
+  <div>
+    <input type="submit" value="Submit" default="true">
+    (<a href="javascript:void(0);" onClick="javascript:clear_content()"
+      >clear contents</a>)
+  </div>
+</form>
+{% endblock %}
