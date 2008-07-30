@@ -9,21 +9,23 @@
 
 <body>
 
-  <div id="header">
-  </div>
+  <div id="container">
+    <div id="header">
+    </div>
+  
+    <div id="navigation">
+      {% block navigation %}
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/seq2sites/">seq2sites</a></li>
+        <li><a href="/sites2seq/">sites2seq</a></li>
+      </ul>
+      {% endblock %}
+    </div>
 
-  <div id="navigation">
-    {% block navigation %}
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/seq2sites/">seq2sites</a></li>
-      <li><a href="/sites2seq/">sites2seq</a></li>
-    </ul>
-    {% endblock %}
-  </div>
-
-  <div id="content">
-    {% block content %}{% endblock %}
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
   </div>
 </body>
 </html>
