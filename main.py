@@ -65,9 +65,9 @@ class Sites2SeqHandler(webapp.RequestHandler):
     def post(self, action):
 
         # get posted parameters
-        format = self.request.get('format')
-        output = self.request.get('output')
-        content = self.request.get('content')
+        format = self.request.get('format').encode('utf8')
+        output = self.request.get('output').encode('utf8')
+        content = self.request.get('content').encode('utf8')
 
         # validate submission
         problems = []
@@ -122,7 +122,7 @@ class Sites2SeqHandler(webapp.RequestHandler):
                 try:
                     for i in range(n):
                         pnames.append(name)
-                        pseqs.append(sites2seq(motif))
+                        pseqs.append(sites2seq(motif, what=output))
                 except Exception, e:
                     valid = False
                     problems.append(e)
