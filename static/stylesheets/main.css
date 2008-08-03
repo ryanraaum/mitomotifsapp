@@ -1,12 +1,63 @@
 body {
   font-family: Verdana, Helvetica, sans-serif;
-  background-color: #EEE;
+  background-color: #ebebeb;
 }
 
 #container {
-  	padding: 25px 40px 10px 40px; 
-  	border: 1px solid #ccc;
-  	background:#fff;
-  	margin:1em auto;
+  	margin: 0px auto;
+	max-width: 45em;
+	min-width: 35em;
+	background: #fff;
 }
 
+div#navigation {
+	background-color: #ebebeb;
+	margin: 0px;
+	border-bottom: 2px solid #ccc;
+}
+
+div#content {
+	margin: 0px;
+}
+
+.hidden {
+	display: none;
+}
+
+.queryform {
+	margin: 1em;
+}
+
+.queryform label {
+	font-size: 0.90em;
+	font-weight: bold;
+}
+
+.querybox textarea {
+	margin-top: 0.5em;
+}
+
+.submitbox {
+	margin: 1em;
+}
+
+.helpbox {
+	font-size: 0.75em;
+	margin: 0.5em;
+	border: 1px dotted #ccc;
+	padding: 0.5em;
+}
+
+a.clearlink {
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.helplink {
+	font-weight: normal;
+}
+
+a.helplink {
+	font-weight: normal;
+	text-decoration: none;
+}

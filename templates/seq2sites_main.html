@@ -12,30 +12,54 @@ function fasta_example_fill() {
 }
 function clear_content() {
   document.mitoform.content.value='';
+  document.mitoform.content.focus();
+}
+function toggleLayer( whichLayer )
+{
+  var elem, vis;
+  if( document.getElementById ) // this is the way the standards work
+    elem = document.getElementById( whichLayer );
+  else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+  else if( document.layers ) // this is the way nn4 works
+    elem = document.layers[whichLayer];
+  vis = elem.style;
+  // if the style.display value is blank we try to figure it out here
+  if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+    vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+  vis.display = (vis.display==''||vis.display=='block')?'none':'block';
 }
 </script>
 {% endblock %}
 
 {% block content %}
-<form name="mitoform" action="results" method="post">
-  <div>
-    <h4>Input format</h4>
-    <p>You may paste in either a single sequence
-    (<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
-      >see example</a>) or multiple sequences in FASTA format
-    (<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
-      >see example</a>). The first letter of your submission
-    is used to determine what you have submitted. If the first letter is
-    a '&gt;' character, then it is assumed you have submitted 
-    multiple sequences in FASTA format. Otherwise it is assumed you
-    have submitted a single sequence.</p>
-    <p>All non-IUPAC nucleotide characters will be removed before the 
-    sequence is processed, so it is ok if the sequences include spaces
-    or line breaks. You should indicate unknown bases with 'N'.</p>
-    <p>If submitting multiple sequences, please note that there are
-    limits on the number of sequences you may submit at one time.</p>
+<form name="mitoform" class="queryform" action="results" method="post">
+  <div class="querybox">
+  	<label for="content">Enter FASTA format sequences
+	<a class="helplink hiding" title="help" href="javascript:void(0);" onclick="javascript:toggleLayer('hq');">
+	  <span>[help]</span>
+	</a>
+	(<a class="clearlink" title="clear" href="javascript:void(0);" onclick="javascript:clear_content()"
+	   >clear</a>)
+	</label>
+	<div toggle="queryHelp" class="helpbox hidden" id="hq">
+    Human mtDNA sequence(s) to be analyzed should be pasted in the text area. 
+	A single sequence may be pasted 'raw' 
+	(<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
+      >example</a>)
+	or in 
+	<a href="http://en.wikipedia.org/wiki/Fasta_format">
+	FASTA format</a>. If you submit more than one sequence, you must use
+	FASTA format 
+	(<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
+      >example</a>).
+    </div> 
+    <textarea name="content" class="reset" rows="10" cols="60"></textarea>
   </div>
-  <div>
+  <div class="submitbox">
+    <input type="submit" value="Submit" default="true">
+  </div>
+  
     <h4>Limits</h4>
     <p>The underlying implementation of this web service does not allow
     long-running requests, which means not too many 
@@ -49,12 +73,6 @@ function clear_content() {
     </ul>
   </div>
   <div>
-    <textarea name="content" rows="10" cols="60"></textarea>
-  </div>
-  <div>
-    <input type="submit" value="Submit" default="true">
-    (<a href="javascript:void(0);" onClick="javascript:clear_content()"
-      >clear contents</a>)
   </div>
 </form>
 {% endblock %}
