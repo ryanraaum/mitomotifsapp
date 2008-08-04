@@ -10,7 +10,7 @@ handlers:
 
 - url: /stylesheets/main.css
   static_files: static/stylesheets/main.css
-  upload: static/images/main.css
+  upload: static/stylesheets/main.css
 
 - url: .*
   script: main.py
