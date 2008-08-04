@@ -104,3 +104,7 @@ a.clearlink {
   text-decoration: none;
   color: #0B6E97;
 }
+
+.reference {
+  margin-left: 2em;
+  text-indent: -2em;
