@@ -33,46 +33,43 @@ function toggleLayer( whichLayer )
 {% endblock %}
 
 {% block content %}
+<p>Identify variant sites in human mitochondrial DNA sequence data.</p>
 <form name="mitoform" class="queryform" action="results" method="post">
   <div class="querybox">
   	<label for="content">Enter FASTA format sequences
-	<a class="helplink hiding" title="help" href="javascript:void(0);" onclick="javascript:toggleLayer('hq');">
-	  <span>[help]</span>
+	<a class="clearlink hiding" title="help" href="javascript:void(0);" 
+       onclick="javascript:toggleLayer('hq');"><span>[help]</span>
 	</a>
-	(<a class="clearlink" title="clear" href="javascript:void(0);" onclick="javascript:clear_content()"
-	   >clear</a>)
+	(<a class="clearlink" title="clear" href="javascript:void(0);" 
+        onclick="javascript:clear_content()">clear</a>)
 	</label>
-	<div toggle="queryHelp" class="helpbox hidden" id="hq">
+	<div class="helpbox hidden" id="hq">
     Human mtDNA sequence(s) to be analyzed should be pasted in the text area. 
 	A single sequence may be pasted 'raw' 
-	(<a href="javascript:void(0);" onClick="javascript:seq_example_fill()"
-      >example</a>)
+	(<a class="clearlink" href="javascript:void(0);" 
+        onClick="javascript:seq_example_fill()">example</a>)
 	or in 
-	<a href="http://en.wikipedia.org/wiki/Fasta_format">
+	<a href="http://en.wikipedia.org/wiki/Fasta_format" target="_blank">
 	FASTA format</a>. If you submit more than one sequence, you must use
 	FASTA format 
-	(<a href="javascript:void(0);" onClick="javascript:fasta_example_fill()"
-      >example</a>).
+	(<a class="clearlink" href="javascript:void(0);" 
+        onClick="javascript:fasta_example_fill()">example</a>).
     </div> 
     <textarea name="content" class="reset" rows="10" cols="60"></textarea>
   </div>
   <div class="submitbox">
     <input type="submit" value="Submit" default="true">
   </div>
-  
-    <h4>Limits</h4>
-    <p>The underlying implementation of this web service does not allow
-    long-running requests, which means not too many 
-    sequences at once. The current limits are based upon the length of
-    the sequences you submit and are:</p>
-    <ul>
-      <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
-        sequences at a time.</li>
-      <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
-        sequences at a time.</li>
-    </ul>
-  </div>
-  <div>
-  </div>
 </form>
+<h4>Limits</h4>
+<p>The underlying implementation of this web service does not allow
+long-running requests, which means not too many 
+sequences at once. The current limits are based upon the length of
+the sequences you submit and are:</p>
+<ul>
+  <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
+    sequences at a time.</li>
+  <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
+    sequences at a time.</li>
+</ul>
 {% endblock %}

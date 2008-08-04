@@ -1,63 +1,106 @@
 body {
   font-family: Verdana, Helvetica, sans-serif;
-  background-color: #ebebeb;
+  font-size: 0.9em;
+  background-color: #EAF2F5;
 }
 
 #container {
-  	margin: 0px auto;
-	max-width: 45em;
-	min-width: 35em;
-	background: #fff;
+  margin: 0px auto;
+  max-width: 45em;
+  min-width: 35em;
+  background: #EAF2F5;
+}
+
+#header h1 {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: 5em;
+  color: #0b306e;
 }
 
 div#navigation {
-	background-color: #ebebeb;
-	margin: 0px;
-	border-bottom: 2px solid #ccc;
+  background-color: #EAF2F5;
+  margin: 0;
+  padding: 0;
+  border-bottom: 2px solid #ccc;
+  min-height: 2em;
+}
+
+div#navigation ul {
+  margin: 0;
+  padding: 0;
+}
+
+div#navigation li {
+  text-align: left;
+  float: left;
+  list-style: none;
+  padding: 3px 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
 }
 
 div#content {
-	margin: 0px;
+  margin: 0px;
+  padding: 1em 2em;
+  background: #fff;
 }
 
 .hidden {
-	display: none;
+  display: none;
 }
 
-.queryform {
-	margin: 1em;
+.optionlist {
+    margin: 0.5em 0;
+    padding-left: 0.5em;
 }
 
-.queryform label {
-	font-size: 0.90em;
-	font-weight: bold;
+.optionlist li {
+  list-style: none;
+}
+
+.optiontitle {
+  font-size: 0.90em;
+  font-weight: bold;
+}
+
+.querybox label {
+  font-size: 0.90em;
+  font-weight: bold;
 }
 
 .querybox textarea {
-	margin-top: 0.5em;
+  margin-top: 0.5em;
 }
 
 .submitbox {
-	margin: 1em;
+  padding: 1em;
+}
+
+.optionsbox {
 }
 
 .helpbox {
-	font-size: 0.75em;
-	margin: 0.5em;
-	border: 1px dotted #ccc;
-	padding: 0.5em;
+  font-size: 0.85em;
+  margin: 0.5em;
+  border: 1px dotted #ccc;
+  padding: 0.5em;
 }
 
 a.clearlink {
-	font-weight: normal;
-	text-decoration: none;
+  font-weight: normal;
+  text-decoration: none;
 }
 
-.helplink {
-	font-weight: normal;
+.navlink a:visited {
+  font-weight: bold;
+  text-decoration: none;
+  color: #0B6E97;
 }
 
-a.helplink {
-	font-weight: normal;
-	text-decoration: none;
+.navlink a:link {
+  font-weight: bold;
+  text-decoration: none;
+  color: #0B6E97;
 }

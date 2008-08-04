@@ -4,71 +4,138 @@
 
 {% block javascript %}
 <script language="JavaScript">
+function clear_content() {
+  document.mitoform.content.value='';
+  document.mitoform.content.focus();
+}
+function toggleLayer( whichLayer )
+{
+  var elem, vis;
+  if( document.getElementById ) // this is the way the standards work
+    elem = document.getElementById( whichLayer );
+  else if( document.all ) // this is the way old msie versions work
+      elem = document.all[whichLayer];
+  else if( document.layers ) // this is the way nn4 works
+    elem = document.layers[whichLayer];
+  vis = elem.style;
+  // if the style.display value is blank we try to figure it out here
+  if(vis.display==''&&elem.offsetWidth!=undefined&&elem.offsetHeight!=undefined)
+    vis.display = (elem.offsetWidth!=0&&elem.offsetHeight!=0)?'block':'none';
+  vis.display = (vis.display==''||vis.display=='block')?'none':'block';
+}
+
+// setCheckedValue is from http://www.somacon.com/p143.php
+// written by Shailesh N. Humbad and placed into the public domain
+//
+// set the radio button with the given value as being checked
+// do nothing if there are no radio buttons
+// if the given value does not exist, all the radio buttons
+// are reset to unchecked
+function setCheckedValue(radioObj, newValue) {
+	if(!radioObj)
+		return;
+	var radioLength = radioObj.length;
+	if(radioLength == undefined) {
+		radioObj.checked = (radioObj.value == newValue.toString());
+		return;
+	}
+	for(var i = 0; i < radioLength; i++) {
+		radioObj[i].checked = false;
+		if(radioObj[i].value == newValue.toString()) {
+			radioObj[i].checked = true;
+		}
+	}
+}
+
 function motif_only() {
   document.mitoform.content.value='16129A 16223T\n16129A,16223T\n16129A;16223T';
+  setCheckedValue(document.mitoform.elements['format'], 'motif_only');
 }
 function name_and_motif() {
   document.mitoform.content.value='Ind1 16129A 16223T\nInd2,16129A,16223T\nInd3;16129A;16223T';
+  setCheckedValue(document.mitoform.elements['format'], 'name_and_motif');
 }
 function name_n_and_motif() {
   document.mitoform.content.value='Ind1 1 16129A 16223T\nInd2,2,16129A,16223T\nInd3;3;16129A;16223T';
-}
-function clear_content() {
-  document.mitoform.content.value='';
+  setCheckedValue(document.mitoform.elements['format'], 'name_n_and_motif');
 }
 </script>
 {% endblock %}
 
 {% block content %}
-<form name="mitoform" action="results" method="post">
-  <div>
-    <h4>Format</h4>
-    <p>Enter separate individuals/haplotypes on separate lines.
-    Commas (,) and semi-colons (;) within the line are ok (will be
-    ignored).</p>
-    <ul>
-      <li><input type="radio" name="format" value="motif_only"   checked >
-        Motif Only 
-        (<a href="javascript:void(0);" onClick="javascript:motif_only()"
-        >see example</a>) 
-      </li>
-      <li><input type="radio" name="format" value="name_and_motif"     >
-        Name and Motif 
-        (<a href="javascript:void(0);" onClick="javascript:name_and_motif()"
-        >see example</a>) 
-      </li>
-      <li><input type="radio" name="format" value="name_n_and_motif"     >
-        Name, N, and Motif 
-        (<a href="javascript:void(0);" onClick="javascript:name_n_and_motif()"
-        >see example</a>) 
-      </li>
-    </ul>
+<p>Transform variant sites into human mitochondrial DNA sequences.</p>
+<form name="mitoform" class="queryform" action="results" method="post">
+  <div class="querybox">
+    <label for="content">Enter variant sites data
+	<a class="clearlink hiding" title="help" href="javascript:void(0);" 
+       onclick="javascript:toggleLayer('hq');"><span>[help]</span>
+	</a>
+    (<a class="clearlink" title="clear" href="javascript:void();"
+        onclick="javascript:clear_content();">clear</a>)
+    </label>
+	<div class="helpbox hidden" id="hq">
+    To retrieve the revised Cambridge Reference Sequence, 
+    use 'rCRS' as the motif.
+    </div>
+    <textarea name="content" rows="10" cols="60"></textarea>
   </div>
-  <div>
-    <h4>Output</h4>
-    <ul>
-      <li><input type="radio" name="output" value="hvr1"   checked >
-        HVR1 (positions 16024-16365)</li>
-      <li><input type="radio" name="output" value="hvr2"       >
-        HVR2 (positions 73-340)</li>
-      <li><input type="radio" name="output" value="hvr1and2"     >
-        HVR1 and HVR2 (positions 16024-16365 and 73-340)</li>
-      <li><input type="radio" name="output" value="hvr1to2"      >
-        HVR1 through HVR2 (positions 16024-16569 and 1-340)</li>
-      <li><input type="radio" name="output" value="coding"       >
-        Coding Region (positions 577-15992)</li>
-      <li><input type="radio" name="output" value="all"        >
-        All (positions 1-16569)</li>
-    </ul>
-  </div>
-  <p>To retrieve the revised Cambridge Reference Sequence, 
-  use 'rCRS' as the motif.</p>
-  <div><textarea name="content" rows="10" cols="60"></textarea></div>
-  <div>
+
+  <div class="submitbox">
     <input type="submit" value="Submit" default="true">
-    (<a href="javascript:void(0);" onClick="javascript:clear_content()"
-      >clear contents</a>)
   </div>
+
+  <div class="optionsbox">
+    <span class="optiontitle">Format
+	<a class="clearlink hiding" title="help" href="javascript:void(0);" 
+       onclick="javascript:toggleLayer('fq');"><span>[help]</span>
+	</a>
+    </span>
+	<div class="helpbox hidden" id="fq">
+    Enter separate individuals/haplotypes on separate lines.
+    Commas (,) and semi-colons (;) within the line are ok (will be
+    ignored).
+    </div> 
+    <ul class="optionlist">
+      <li><input id="mo" type="radio" name="format" value="motif_only"   checked >
+        <label for="mo">Motif Only</label> 
+        (<a class="clearlink" href="javascript:void(0);" 
+            onClick="javascript:motif_only()">example</a>) 
+      </li>
+      <li><input id="nm" type="radio" name="format" value="name_and_motif"     >
+        <label for="nm">Name and Motif</label> 
+        (<a class="clearlink" href="javascript:void(0);" 
+            onClick="javascript:name_and_motif()">example</a>) 
+      </li>
+      <li><input id="nnm" type="radio" name="format" value="name_n_and_motif"     >
+        <label for="nnm">Name, N, and Motif</label> 
+        (<a class="clearlink" href="javascript:void(0);" 
+            onClick="javascript:name_n_and_motif()">example</a>) 
+      </li>
+    </ul>
+    <span class="optiontitle">Output
+	<a class="clearlink hiding" title="help" href="javascript:void(0);" 
+       onclick="javascript:toggleLayer('oq');"><span>[help]</span>
+	</a>
+    </span>
+	<div class="helpbox hidden" id="oq">
+    What portion of the human mitochondrial genome should be returned.
+    </div>
+    <ul class="optionlist">
+      <li><input id="hvr1" type="radio" name="output" value="hvr1"   checked >
+        <label for="hvr1">HVR1 (positions 16024-16365)</label></li>
+      <li><input id="hvr2" type="radio" name="output" value="hvr2"           >
+        <label for="hvr2">HVR2 (positions 73-340)</label></li>
+      <li><input id="hvr1and2" type="radio" name="output" value="hvr1and2"       >
+        <label for="hvr1and2">HVR1 and HVR2 (positions 16024-16365 and 73-340)</label></li>
+      <li><input id="hvr1to2" type="radio" name="output" value="hvr1to2"        >
+        <label for="hvr1to2">HVR1 through HVR2 (positions 16024-16569 and 1-340)</label></li>
+      <li><input id="coding" type="radio" name="output" value="coding"         >
+        <label for="coding">Coding Region (positions 577-15992)</label></li>
+      <li><input id="all" type="radio" name="output" value="all"            >
+        <label for="all">All (positions 1-16569)</label></li>
+    </ul>
+  </div>
+
 </form>
 
 {% endblock %}
