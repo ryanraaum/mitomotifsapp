@@ -124,7 +124,7 @@ class Sites2SeqHandler(webapp.RequestHandler):
             for name,n,motif in zip(names,ns,motifs):
                 try:
                     sites = sites_from_string(motif)
-                    curr_seq = sites2seq(sites, what=output)
+                    curr_seq = sites2seq(sites, what=output, wrap_at=70)
                     for i in range(n):
                         pnames.append(name)
                         pseqs.append(curr_seq)
