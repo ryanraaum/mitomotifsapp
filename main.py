@@ -25,6 +25,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 from mitomotifs import sites2seq
+from mitomotifs import sites_from_string
 from mitomotifs import seq2sites
 from mitomotifs import sites2str
 from fasta import iterate_fasta
@@ -98,7 +99,8 @@ class Sites2SeqHandler(webapp.RequestHandler):
                         name, motif = split 
                     else:
                         valid = False
-                        problems.append('The entry "%s" does not seem to be correctly formatted' % curr_line)
+                        msg = 'The entry "%s" is not correctly formatted' % curr_line
+                        problems.append(msg)
                 elif format == 'name_n_and_motif':
                     split = line.split(' ', 2)
                     if len(split) == 3:
@@ -110,7 +112,8 @@ class Sites2SeqHandler(webapp.RequestHandler):
                             n = int(n)
                     else:
                         valid = False
-                        problems.append('The entry "%s" does not seem to be correctly formatted' % curr_line)
+                        msg = 'The entry "%s" is not correctly formatted' % curr_line
+                        problems.append(msg)
                 names.append(name)
                 ns.append(n)
                 motifs.append(motif)
@@ -120,9 +123,11 @@ class Sites2SeqHandler(webapp.RequestHandler):
             pseqs = []
             for name,n,motif in zip(names,ns,motifs):
                 try:
+                    sites = sites_from_string(motif)
+                    curr_seq = sites2seq(sites, what=output)
                     for i in range(n):
                         pnames.append(name)
-                        pseqs.append(sites2seq(motif, what=output))
+                        pseqs.append(curr_seq)
                 except Exception, e:
                     valid = False
                     problems.append(e)
@@ -217,8 +222,8 @@ class Seq2SitesHandler(webapp.RequestHandler):
         for seq in seqs:
             try:
                 result_lines.append(sites2str(seq2sites(seq)))
-            except:
-                result_lines.append('There was an error processing this sequence')
+            except Exception, e:
+                result_lines.append('There was an error: %s' % e)
 
         results = list(Result(x,y) for x,y in zip(names,result_lines))
         template_values = {'format'     :format,
