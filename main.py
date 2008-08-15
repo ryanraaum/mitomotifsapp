@@ -231,6 +231,15 @@ class Seq2SitesHandler(webapp.RequestHandler):
         path = os.path.join(TEMPLATES, 'seq2sites_result.html')
         self.response.out.write(template.render(path, template_values))
 
+class DocPagesHandler(webapp.RequestHandler):
+    def get(self, action):
+        template_values = {}
+        path = os.path.join(TEMPLATES, 'doc_main.html')
+        self.response.out.write(template.render(path, template_values))
+    
+    def post(self):
+        _404error(self)
+
 class NoSuchURLHandler(webapp.RequestHandler):
     def get(self):
         _404error(self)
@@ -241,8 +250,9 @@ class NoSuchURLHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
-        ('/sites2seq/(.*)', Sites2SeqHandler),
-        ('/seq2sites/(.*)', Seq2SitesHandler),
+        ('/sites2seq/?(.*)', Sites2SeqHandler),
+        ('/seq2sites/?(.*)', Seq2SitesHandler),
+        ('/documentation/?(.*)', DocPagesHandler),
         ('/.*', NoSuchURLHandler),
         ],debug=True)
     wsgiref.handlers.CGIHandler().run(application)
