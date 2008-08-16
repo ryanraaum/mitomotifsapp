@@ -28,7 +28,7 @@ from mitomotifs import sites2seq
 from mitomotifs import sites_from_string
 from mitomotifs import seq2sites
 from mitomotifs import sites2str
-from fasta import iterate_fasta
+from fasta import fasta
 from fasta import entry2str
 
 MAX_SEQS_SHORT  = 50
@@ -186,7 +186,7 @@ class Seq2SitesHandler(webapp.RequestHandler):
             try:
                 fnames = []
                 fseqs = []
-                for entry in iterate_fasta(content, 'text'):
+                for entry in fasta(content, 's'):
                     fnames.append(entry['name'])
                     fseqs.append(re.sub(r'[^ACGTURYMKSWBDHVN]', '', entry['sequence'].upper()))
                 names = fnames
