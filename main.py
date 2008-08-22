@@ -25,7 +25,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 from mitomotifs import sites2seq
-from mitomotifs import sites_from_string
+from mitomotifs import str2sites
 from mitomotifs import seq2sites
 from mitomotifs import sites2str
 from fasta import fasta
@@ -123,8 +123,14 @@ class Sites2SeqHandler(webapp.RequestHandler):
             pseqs = []
             for name,n,motif in zip(names,ns,motifs):
                 try:
-                    sites = sites_from_string(motif)
-                    curr_seq = sites2seq(sites, what=output, wrap_at=70)
+                    sites = str2sites(motif)
+                    curr_seq = sites2seq(sites, region=output)
+                    exploded_seq = list(curr_seq)
+                    wrap_points = range(0,len(exploded_seq),70)
+                    wrap_points.reverse()
+                    for i in wrap_points[:-1]:
+                        exploded_seq.insert(i, '\n')
+                    curr_seq = ''.join(exploded_seq)
                     for i in range(n):
                         pnames.append(name)
                         pseqs.append(curr_seq)
