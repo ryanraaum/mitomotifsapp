@@ -57,9 +57,31 @@ function toggleLayer( whichLayer )
     </div> 
     <textarea name="content" class="reset" rows="10" cols="60"></textarea>
   </div>
+
   <div class="submitbox">
     <input type="submit" value="Submit" default="true">
   </div>
+
+  <span class="optiontitle">Haplogroup Identifier
+    <a class="clearlink hiding" title="help" href="javascript:void(0);" 
+       onclick="javascript:toggleLayer('aq');"><span>[help]</span>
+	</a>
+  </span>
+  <div class="helpbox hidden" id="aq">
+  Formats data on substitutions and insertions between sites 16023 and 16569
+  for the Genographic w-NN haplogroup caller
+  (http://nnhgtool.nationalgeographic.com/classify/). This means that all
+  sites outside of this region will not be shown, no deletions will be
+  shown, and no sequence identifiers will be shown. You may then copy these
+  data and submit them to the Genographic Haplotype Identifier. (When various
+  technical difficulties become resolvable, this process will be automated
+  in a much more user-friendly manner.)
+  </div>
+  <ul class="optionlist">
+  <li><input id="wNN" type="checkbox" name="wNN" value="yes" >
+  <label for="wNN">Format for Genographic w-NN Haplogroup Identifier?</label></li>
+  </ul>
+
 </form>
 <h4>Limits</h4>
 <p>The underlying implementation of this web service does not allow

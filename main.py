@@ -32,11 +32,13 @@ import os
 import cgi
 import re
 import logging
+import urllib
 
 import wsgiref.handlers
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+from google.appengine.api import urlfetch
 
 from mitomotifs import sites2seq
 from mitomotifs import str2sites
@@ -91,12 +93,10 @@ class Sites2SeqHandler(webapp.RequestHandler):
             
     def post(self, action):
         if action == "results":
-            valid, data = process_sites2seq(self)
+            valid, template_values = process_sites2seq(self)
             if valid:
-                template_values = {'results': data}
                 path = os.path.join(TEMPLATES, 'sites2seq_result.html')
             else:
-                template_values = {'problems': data}
                 path = os.path.join(TEMPLATES, 'standard_error.html')
             self.response.out.write(template.render(path, template_values))
         else:
@@ -117,12 +117,10 @@ class Seq2SitesHandler(webapp.RequestHandler):
             
     def post(self, action):
         if action == "results":
-            valid, data = process_seq2sites(self)
+            valid, template_values = process_seq2sites(self)
             if valid:
-                template_values = {'results': data}
                 path = os.path.join(TEMPLATES, 'seq2sites_result.html')
             else:
-                template_values = {'problems': data}
                 path = os.path.join(TEMPLATES, 'standard_error.html')
             self.response.out.write(template.render(path, template_values))
         else:
@@ -248,16 +246,18 @@ def process_sites2seq(handler):
                 problems.append(e)
 
     if not valid:
-        return (False, problems)
+        return (False, {'problems': problems})
+
     as_fasta = ''.join(list(entry2str({'name':name,'sequence':seq}, WRAP) 
                              for name,seq in zip(pnames, pseqs)))
-    return (True, as_fasta)
+    return (True, {'results': as_fasta})
 
 
 def process_seq2sites(handler):
     """Process data submitted in seq2sites form"""
     # get posted parameters
     content = handler.request.get('content')
+    wNN = handler.request.get('wNN') == 'yes'
 
     # submission validation and error reporting
     problems = []
@@ -312,17 +312,42 @@ def process_seq2sites(handler):
             problems.append('too many sequences submitted')
 
     if not valid:
-        return (False, problems)
+        return (False, {'problems': problems})
 
     result_lines = []
+    sites_by_line = []
     for seq in seqs:
         try:
-            result_lines.append(sites2str(seq2sites(seq)))
+            sites = seq2sites(seq)
+            sites_by_line.append(sites)
+            result_lines.append(sites2str(sites))
         except Exception, e:
             result_lines.append('There was an error: %s' % e)
 
+    if wNN:
+        names = ['']*len(sites_by_line)
+        result_lines = []
+        for sites in sites_by_line:
+            curr_hvs1 = list(x for x in sites 
+                             if int(x.position) in range(16023, 16570)
+                             and not x.is_deletion())
+            result_lines.append(sites2str(curr_hvs1))
+        # un-comment the following when it is possible to POST 
+        # a multipart/form-data form from google app engine
+        #form_fields = {'samples': '\n'.join(hvs1_lines)}
+        #form_data = urllib.urlencode(form_fields)
+        #url = "http://nnhgtool.nationalgeographic.com/cgi-bin/classify/classify.ksh"
+        #result = urlfetch.fetch(url=url,
+        #           payload=form_data,
+        #           method=urlfetch.POST,
+        #           headers={'Content-Type': 'multipart/form-data'})
+        #logging.info('urlfetch content: %s' % result.content)
+
     results = list(Result(x,y) for x,y in zip(names,result_lines))
-    return (True, results)
+    template_values = {'results': results}
+    if wNN:
+        template_values['show_note'] = 'wNN'
+    return (True, template_values)
 
 #----------------------------------------------------------------------------#
 # RUN

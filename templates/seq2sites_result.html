@@ -4,9 +4,14 @@
 
 {% block content %}
 <h2>Results</h2>
+{% if show_note %}
+<p>Copy the following text and paste it into the text box at the <a
+href="http://nnhgtool.nationalgeographic.com/classify/">Genographic Haplogroup
+Prediction Tool</a>. (Note that any extra blank lines at the end after you
+paste should be deleted.)</p>
+{% endif %}
 <pre>
-{% for result in results %}
-{{ result.name }} {{ result.value }}
+{% for result in results %}{{ result.name }} {{ result.value }}
 {% endfor %}
 </pre>
 {% endblock %}
