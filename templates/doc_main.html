@@ -1,1 +1,30 @@
 {% extends "base.html" %}
+
+{% block content %}
+
+<h3>Nomenclature</h3>
+<p>The variant sites nomenclature follows the conventions established in the
+human mitochondrial sequence analysis literature (formally published by
+Carrecedo et al. 2000). These rules are most easily explained by some examples.</p>
+
+<ul>
+<li>73G: A substitution of a 'G' for the nucleotide at site 73 in the rCRS.</li>
+<li>220d: The deletion of the nucleotide at site 220 in the rCRS.</li>
+<li>315.1C: An insertion of a 'C' between sites 315 and 316 of the rCRS.</li>
+<li>315.1C, 315.2C: An insertion of two 'C's between sites 315 and 316 of the rCRS.</li>
+</ul>
+
+<p>NOTE: It is common for transitions (A <-> G or C <-> T) to be indicated only by 
+position. Thus, the 73G variant might often be seen written as 73. Functions in 
+the MitoMotifs module will accept and understand this notation, but do not 
+produce it.</p>
+
+<h3>References</h3>
+
+<p class="reference">Carracedo A, Bar W, Lincoln P, Mayr W, Morling N, Olaisen
+B, Schneider P, Budowle B, Brinkmann B, Gill P, Holland M, Tully G, Wilson M.
+2000. <a href="http://www.ncbi.nlm.nih.gov/pubmed/10808096">DNA Commission of
+the International Society for Forensic Genetics: guidelines for mitochondrial
+DNA typing</a>. Forensic Science International 110:79-85.</p>
+
+{% endblock %}
