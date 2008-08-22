@@ -93,6 +93,11 @@ a.clearlink {
   text-decoration: none;
 }
 
+h3.nestedlink a {
+  text-decoration: none;
+  color: black;
+}
+
 .navlink a:visited {
   font-weight: bold;
   text-decoration: none;
