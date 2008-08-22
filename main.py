@@ -31,6 +31,7 @@
 import os
 import cgi
 import re
+import logging
 
 import wsgiref.handlers
 
@@ -182,6 +183,7 @@ def process_sites2seq(handler):
     format = handler.request.get('format').encode('utf8')
     output = handler.request.get('output').encode('utf8')
     content = handler.request.get('content').encode('utf8')
+    add16k = handler.request.get('add16k').encode('utf8') == 'add16k'
 
     # validate submission
     problems = []
@@ -237,7 +239,7 @@ def process_sites2seq(handler):
         for name,n,motif in zip(names,ns,motifs):
             try:
                 sites = str2sites(motif)
-                seq = sites2seq(sites, region=output)
+                seq = sites2seq(sites, region=output, add16k=add16k)
                 for i in range(n):
                     pnames.append(name)
                     pseqs.append(seq)
