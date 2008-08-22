@@ -2,23 +2,221 @@
 
 {% block content %}
 
+<h3>On this page</h3>
+<ul>
+<li><a href="#seq2sites">seq2sites</a></li>
+<li><a href="#sites2seq">sites2seq</a></li>
+<li><a href="#nomenclature">Nomenclature</a></li>
+<li><a href="#commandline">Command Line</a></li>
+<li><a href="#package">Python Packages</a></li>
+<li><a href="#development">Development</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+
+<hr />
+
+<a name="seq2sites"></a>
+<h3>seq2sites</h3>
+
+<p>Basic usage instructions are also available on the main tool page. You may
+submit either a single sequence or multiple sequences in FASTA format.</p>
+
+<p>Example of a single sequence submission.</p>
+<pre>
+TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAACC
+GCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATACT
+TGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCTCCTCATGCTTACAA
+GCAAGTACAGCAATCAACCCTCAACTATCACACATCAACTGCAACTCCAAAGTCACCCCT
+CACCCATTAGGATACCAACAAACCTACCCATCCTTAACAGTACATAGTACATAAAGCCAT
+TTACCGTACATAGCACATTACAGTCAAATCCCTTCTCGTCCC
+</pre>
+
+<p>Example of a multiple sequence FASTA format submission.</p>
+<pre>
+&gt;Seq1
+TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC
+GCTATGTATTTCGTACATTACTGCCAGCCACCATGAATATTGTACGGTACCATAAATAC
+TGACCACCTGTAGTACATAAAAACCCAATCCACATCAAAACCCCCCCCTCATGCTTACA
+GCAAGTACAGCAATCAACC
+&gt;Seq2
+TTCTTTCATGGGGAAGCAGATTTGGGTACCACCCAAGTATTGACTCACCCATCAACAAC
+GCTATGTATCTCGTACATTACTGCCAGCCACCATGAATATTGTACAGTACCATAAATAC
+TGACCACCTGTAGTACATAAAAACCCAATCCACATCAAA-CCCCCCCCCCATGCTTACA
+GCAAGTACAGCAATCAACC
+</pre>
+
+<p>All letters or symbols not in the IUPAC nucleotide standard (i.e. anything
+other than A, C, G, T, U, R, Y, M, K, S, W, B, D, H, V, or N) will be deleted
+from the sequence.  This means use N instead of ? to indicate unknown
+bases.</p>
+
+<p>No more than 10 unknown sites are allowed.</p>
+
+<p>Gaps, as indicated by the '-' character, are allowed, but stripped out
+before the sequence is analyzed. That is, if you have gaps already indicated in
+your sequence, they will not cause any problems, but your placement of those
+gaps will not be used.</p>
+
+<p>Discontinuous sequence, such as HVR1 and HVR2 concatenated without the
+intervening sequence, will not work. If you have such data, you must submit the
+two sequence segments separately. If you have HVR1 through HVR2, including
+the intervening sequence, that is fine to submit.</p>
+
+<p>The underlying implementation of this web service does not allow
+long-running requests, which means not too many sequences at once. The current
+limits are based upon the length of the sequences you submit and are:</p> 
+
+<ul>
+  <li>Sequences &lt;= {{ cutoff }}bp, up to {{ max_short }} 
+    sequences at a time.</li>
+  <li>Sequences &gt; {{ cutoff }}bp, up to {{ max_long }} 
+    sequences at a time.</li>
+</ul>
+
+<a name="sites2seq"></a>
+<h3>sites2seq</h3>
+
+<p>Basic usage instructions are also available on the main tool page. You may
+submit variant sites information in one of three formats.</p>
+
+<p>Site information only (one sample/haplotype/individual per line)</p>
+<pre>
+16223T
+16223 16311
+</pre>
+
+<p>ID and site information</p>
+<pre>
+Ind1 16223T
+Ind2 16223 16311
+</pre>
+
+<p>ID, N (sample size for this ID), and site information</p>
+<pre>
+Ind1 2 16223T
+Ind2 1 16223 16311
+</pre>
+
+<p>ID, N, and individual sites may be separated by any combination of spaces,
+commas, or semi-colons. That is, all of the following are identical.</p> 
+<pre>
+Ind1 1 16129A 16223T
+Ind2,2,16129A 16223T
+Ind3;3 16129A,16223T
+</pre>
+
+<p>To retrieve the reference sequence, use 'rCRS' (or 'CRS') as the sequence
+(the resulting sequence will always be the rCRS, for both 'rCRS' and 'CRS').
+So, if you were using the name and site information input format, this might be
+something like:</p>
+<pre>
+Ind1 16223T
+Ind2 rCRS
+</pre>
+
+<p>If no nucleotide is given in the site information, it is assumed to be a
+transition. So, these two lines are equivalent.</p>
+<pre>
+16311T
+16311
+</pre>
+
+<p>Insertions may be indicated using the '.1C', 'insC', or '+C' methods. The
+'.1C' version is the prefered nomenclature and is what will be produced by the
+seq2sites tool.The following lines are all equivalent and indicate the
+insertion of a C between positions 315 and 316.</p>
+<pre>
+315.1C
+315insC
+315+C
+</pre>
+
+<p>Multiple insertions may also be indicated with any of the above methods. The
+following lines are all equivalent and indicate the insertion of 2 C's between
+positions 315 and 316.</p>
+<pre>
+315.1C 315.2C
+315insCC
+315+CC
+</pre>
+
+<p>Similarly, deletions may be indicated by '-', 'd', or 'del'. All of the
+following are equivalent.</p>
+<pre>
+204-
+204d
+204del
+204delA
+</pre>
+
+<p>The 'add 16000' option, when selected, will add 16000 to all sites. This is
+useful for variant sites listings from the literature that use the HVR1
+abbreviations (i.e. 311 instead of 16311).</p>
+
+<p>Your output selection determines which region of the human mitochondrial
+genome will be generated. The options are:</p>
+<ul>
+<li>HVR1 (positions 16024-16365)</li>
+<li>HVR2 (positions 73-340)</li>
+<li>HVR1 through HVR2 (positions 16024-16569 and 1-340)</li>
+<li>Coding Region (positions 577-15992)</li>
+<li>All (positions 1-16569)</li>
+</ul>
+
+<a name="nomenclature"></a>
 <h3>Nomenclature</h3>
+
 <p>The variant sites nomenclature follows the conventions established in the
 human mitochondrial sequence analysis literature (formally published by
 Carrecedo et al. 2000). These rules are most easily explained by some examples.</p>
 
 <ul>
-<li>73G: A substitution of a 'G' for the nucleotide at site 73 in the rCRS.</li>
-<li>220d: The deletion of the nucleotide at site 220 in the rCRS.</li>
-<li>315.1C: An insertion of a 'C' between sites 315 and 316 of the rCRS.</li>
-<li>315.1C, 315.2C: An insertion of two 'C's between sites 315 and 316 of the rCRS.</li>
+<li>73G: a substitution of a 'G' for the nucleotide at site 73 in the rCRS.</li>
+<li>220d: the deletion of the nucleotide at site 220 in the rCRS.</li>
+<li>315.1C: an insertion of a 'C' between sites 315 and 316 of the rCRS.</li>
+<li>315.1C, 315.2C: an insertion of two 'C's between sites 315 and 316 of the rCRS.</li>
 </ul>
 
-<p>NOTE: It is common for transitions (A <-> G or C <-> T) to be indicated only by 
+<p>Note: it is common for transitions (A <-> G or C <-> T) to be indicated only by 
 position. Thus, the 73G variant might often be seen written as 73. Functions in 
-the MitoMotifs module will accept and understand this notation, but do not 
+the Mitomotifs module will accept and understand this notation, but do not 
 produce it.</p>
 
+<a name="commandline"></a>
+<h3>Command Line</h3>
+
+<p>Command line versions of these tools are available for use on your own
+computer. These are implemented in the Python programming language, and you
+will need to have that installed on your system. Download and installation
+instructions for Python are available from the <a
+href="http://www.python.org">main Python site</a>. If you are using Mac OS X or
+a Linux distribution, you should already have Python.</p>
+
+<p>The command line versions are distributed from the Python Package Index: <a
+href="http://pypi.python.org/pypi/oldowan.mitomotifs-cmdline">http://pypi.python.org/pypi/oldowan.mitomotifs-cmdline</a>.
+You will find installation and basic usage instructions there.</p>
+
+<a name="package"></a>
+<h3>Python Package</h3>
+
+<p>These tools are implemented in the Python programming language and the
+backend is distributed as the <em>oldowan.mitomotifs</em> package. This package
+is distributed from the Python Package Index: <a
+href="http://pypi.python.org/pypi/oldowan.mitomotifs">http://pypi.python.org/pypi/oldowan.mitomotifs</a>.
+You will find installation and basic usage instructions there.</p>
+
+<a name="development"></a>
+<h3>Development</h3>
+
+<p>These tools are open source (MIT License) and hosted at <a href="http://github.com">github</a>. There are 4 separate components that may be of interest:</p>
+<ul>
+<li><a href="http://github.com/ryanraaum/mitomotifsapp">mitomotifsapp</a>, the Google App Engine web interface</li>
+<li><a href="http://github.com/ryanraaum/oldowan/tree/master/mitomotifs">oldowan.mitomotifs</a>, the sites2seq and seq2sites backend</li>
+<li><a href="http://github.com/ryanraaum/oldowan/tree/master/mitomotifs_cmdline">oldowan.mitomotifs-cmdline</a>, the sites2seq and seq2sites command line tools</li>
+<li><a href="http://github.com/ryanraaum/oldowan/tree/master/fasta">oldowan.fasta</a>, read and write FASTA format</li>
+</ul>
+
+<a name="references"></a>
 <h3>References</h3>
 
 <p class="reference">Carracedo A, Bar W, Lincoln P, Mayr W, Morling N, Olaisen

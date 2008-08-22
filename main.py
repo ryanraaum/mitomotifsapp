@@ -107,7 +107,8 @@ class Seq2SitesHandler(webapp.RequestHandler):
         if action == "" or action == "main":
             template_values = {'max_long'   :MAX_SEQS_LONG,
                                'max_short'  :MAX_SEQS_SHORT,
-                               'cutoff'     :LONG_SEQ_CUTOFF}
+                               'cutoff'     :LONG_SEQ_CUTOFF,
+                               'wrap'       :WRAP}
             path = os.path.join(TEMPLATES, 'seq2sites_main.html')
             self.response.out.write(template.render(path, template_values))
         else:
@@ -129,7 +130,10 @@ class Seq2SitesHandler(webapp.RequestHandler):
 
 class StaticPageHandler(webapp.RequestHandler):
     def get(self, page, action):
-        template_values = {}
+        template_values = {'max_long'   :MAX_SEQS_LONG,
+                           'max_short'  :MAX_SEQS_SHORT,
+                           'cutoff'     :LONG_SEQ_CUTOFF,
+                           'wrap'       :WRAP}
         path = os.path.join(TEMPLATES, '%s.html' % page)
         self.response.out.write(template.render(path, template_values))
     
