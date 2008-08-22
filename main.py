@@ -15,6 +15,10 @@
 # limitations under the License.
 #
 
+#----------------------------------------------------------------------------#
+# IMPORTS
+#----------------------------------------------------------------------------#
+
 import os
 import cgi
 import re
@@ -31,15 +35,28 @@ from mitomotifs import sites2str
 from fasta import fasta
 from fasta import entry2str
 
+#----------------------------------------------------------------------------#
+# CONSTANTS
+#----------------------------------------------------------------------------#
+
 MAX_SEQS_SHORT  = 50
 MAX_SEQS_LONG   = 20
 LONG_SEQ_CUTOFF = 1500
 TEMPLATES       = os.path.join(os.path.dirname(__file__), 'templates')
 
+#----------------------------------------------------------------------------#
+# UTILITY CLASSES
+#----------------------------------------------------------------------------#
+
 class Result(object):
+    """Simple object to hold results for template"""
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
+#----------------------------------------------------------------------------#
+# HANDLERS
+#----------------------------------------------------------------------------#
 
 def _404error(handler):
     """Standard 404 actions for any RequestHandler."""
@@ -253,6 +270,10 @@ class NoSuchURLHandler(webapp.RequestHandler):
     def post(self):
         _404error(self)
 
+#----------------------------------------------------------------------------#
+# ROUTING
+#----------------------------------------------------------------------------#
+
 def main():
     application = webapp.WSGIApplication([
         ('/', MainHandler),
@@ -262,6 +283,22 @@ def main():
         ('/.*', NoSuchURLHandler),
         ],debug=True)
     wsgiref.handlers.CGIHandler().run(application)
+
+#----------------------------------------------------------------------------#
+# PROCESSING FUNCTIONS
+#----------------------------------------------------------------------------#
+
+def process_seq2sites(handler):
+    """Process data submitted in seq2sites form"""
+    return (True, results)
+
+def process_sites2seq(handler):
+    """Process data submitted in sites2seq form"""
+    return (True, results)
+
+#----------------------------------------------------------------------------#
+# RUN
+#----------------------------------------------------------------------------#
 
 if __name__ == '__main__':
     main()
