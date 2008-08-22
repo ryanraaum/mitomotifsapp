@@ -127,10 +127,10 @@ class Seq2SitesHandler(webapp.RequestHandler):
             _404error(self)
                 
 
-class DocPagesHandler(webapp.RequestHandler):
-    def get(self, action):
+class StaticPageHandler(webapp.RequestHandler):
+    def get(self, page, action):
         template_values = {}
-        path = os.path.join(TEMPLATES, 'doc_main.html')
+        path = os.path.join(TEMPLATES, '%s.html' % page)
         self.response.out.write(template.render(path, template_values))
     
     def post(self):
@@ -153,7 +153,7 @@ def main():
         ('/', MainHandler),
         ('/sites2seq/?(.*)', Sites2SeqHandler),
         ('/seq2sites/?(.*)', Seq2SitesHandler),
-        ('/documentation/?(.*)', DocPagesHandler),
+        ('/(documentation|contact)/?(.*)', StaticPageHandler),
         ('/.*', NoSuchURLHandler),
         ],debug=True)
     wsgiref.handlers.CGIHandler().run(application)
