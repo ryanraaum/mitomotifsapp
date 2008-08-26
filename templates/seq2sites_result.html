@@ -11,7 +11,7 @@ Prediction Tool</a>. (Note that any extra blank lines at the end after you
 paste should be deleted.)</p>
 {% endif %}
 <pre>
-{% for result in results %}{{ result.name }} {{ result.value }}
+{% for result in results %}{{ result.name }}, {{ result.value }}
 {% endfor %}
 </pre>
 {% endblock %}
